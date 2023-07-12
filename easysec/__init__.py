@@ -1,1 +1,1 @@
-from 
+from easysec.easysec import easysec
