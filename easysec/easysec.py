@@ -11,7 +11,7 @@ class easysec():
         if cik:
             self.cik = cik
 
-    def companyTickers(self):
+    def companytickers(self):
         response = requests.get(
         'https://www.sec.gov/files/company_tickers.json',
         headers = self.headers)
