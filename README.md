@@ -1,14 +1,14 @@
 # easysec
 Python library to import data from SEC.gov
 
-## Company tickers
+### Company tickers
 
-## Submissions
+### Submissions
 
-## Forms
+### Forms
 
-## Company concept
+### Company concept
 
-## Company facts
+### Company facts
 
-## Frames
+### Frames
