@@ -1,4 +1,3 @@
-# %%
 import requests
 import json
 import pandas as pd
@@ -9,7 +8,7 @@ class easysec():
     def __init__(self, headers: dict, cik: str = None):
         self.headers = headers
         if cik:
-            self.cik = cik
+            self.cik = cik.zfill(10)
 
     def companytickers(self):
         response = requests.get(
@@ -38,13 +37,16 @@ class easysec():
         return forms
     
     def companyconcept(self, cik: str):
+        response = requests.get(
+        self.BASE_URL + f'api/xbrl/companyconcept/CIK{cik}.json',
+        headers = self.headers)
+        data = json.loads(response.text)
         pass
 
     def companyfacts(self, cik: str):
         response = requests.get(
         self.BASE_URL + f'api/xbrl/companyfacts/CIK{cik}.json',
-        headers = self.headers
-        )
+        headers = self.headers)
         data = json.loads(response.text)
 
         us_gaaps = [*data['facts']['us-gaap']]
@@ -68,15 +70,9 @@ class easysec():
             dfs_us_gaaps.append(temp_df)
         
         df = pd.concat(dfs_us_gaaps)
-        df['cik_str'] = df['cik_str'].astype(str).str.zfill(10)
+        df['cik'] = df['cik'].astype(str).str.zfill(10)
+        df.reset_index(inplace=True)
         return df
 
     def frames(self, cik: str):
         pass
-
-data_importer = easysec()
-#filings = data_importer.get_filings("0000320193", "10-K")
-
-#for filing in filings:
-#    print(filing)
-# %%
