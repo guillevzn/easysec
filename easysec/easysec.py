@@ -46,14 +46,26 @@ class easysec():
 
         return df
     
-    def companyconcept(self):
+    def companyconcept(self, concept):
         if self.cik == None:
             raise ValueError('You must specify a CIK code.')
         response = requests.get(
-        self.BASE_URL + f'api/xbrl/companyconcept/CIK{self.cik}.json',
+        self.BASE_URL + f'api/xbrl/companyconcept/CIK{self.cik}/us-gaap/{concept}.json',
         headers = self.headers)
         data = json.loads(response.text)
-        return data
+
+        units = [*data['units'].keys()]
+
+        dfs_units = list()
+        for unit in units:
+            temp_df = pd.json_normalize(data, ['units', [unit]])
+            temp_df.insert(0, 'unit', unit)
+            dfs_units.append(temp_df)
+        
+        df = pd.concat(dfs_units)
+        df.reset_index(inplace=True)
+
+        return df
 
     def companyfacts(self):
         if self.cik == None:
@@ -89,10 +101,14 @@ class easysec():
         return df
 
     def frames(self, tag: str, uom: str, ccp: str):
-        if self.cik == None:
-            raise ValueError('You must specify a CIK code.')
         response = requests.get(
         self.BASE_URL + f'api/xbrl/frames/us-gaap/{tag}/{uom}/{ccp}.json',
         headers = self.headers)
         data = json.loads(response.text)
-        return data
+
+        meta = [*data.keys()]
+        meta.remove('data')
+
+        df = pd.json_normalize(data, 'data', meta)
+
+        return df
