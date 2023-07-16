@@ -1,7 +1,7 @@
 # easysec
 Python library to import data from SEC.gov
 
-Install via pip: ```pip install easyfred```
+Install via pip: ```pip install easysec```
 
 Example usage
 ```
